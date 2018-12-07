@@ -1,1 +1,1 @@
-from Project3 import Schrodinger
+from project3 import Schrodinger
