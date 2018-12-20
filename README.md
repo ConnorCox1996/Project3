@@ -16,7 +16,7 @@ the lowest-energy state of the Hamiltonian can be determined by solving for eige
 
 The Schrodinger equation is as follows:
 
-.. image:: https://latex.codecogs.com/gif.latex?%5Cinline%20%5Chat%7BH%7D%5CPsi%28x%29%20%3D%20E%5CPsi%28x%29
+image:: https://latex.codecogs.com/gif.latex?%5Cinline%20%5Chat%7BH%7D%5CPsi%28x%29%20%3D%20E%5CPsi%28x%29
 
 where H is the Hamiltonian operator, psi is the wavefunction, & E is the Energy
 
