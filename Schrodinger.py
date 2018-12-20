@@ -1,19 +1,26 @@
 
 import tensorflow as tf 
 tf.enable_eager_execution()
-
 from tensorflow import linalg
-
-import argparse
 import math
 import numpy as np
-#Check if this messes with coverage??
-#definitely FIX FORMATTING OF COMMENTS ABOVE FN
-'''HANDLING INPUT TABLE
-this takes the input table of position & potential energy values,
-these values must be stored, either as:
-.txt or .csv files
-*Note: if .txt, values must be separated commas (see EXAMPLE)
+
+''' Handling Input Table
+------------------------------------------------------------------
+    Reads position, potential energy, c, & basis set size values from input table,
+    table should be a .dat file saved as 
+    "potential_energy.dat"
+    the table should appear as follows: "Positions, Potential Energy"
+    *Note these values are comma separated*
+    position & potential energy values should be include pairwise, separated by commas (one position & one potential energy value per line)
+    
+    Values will be converted to floating point numbers
+
+    OTHER INPUTS: the LAST ROW OF THE TABLE should include c & basis set size values
+    in the order "c, size"
+
+**Please Note: these values will be printed to the console to ensure they have been read as expected**
+
 .................................................................
 -->position & potential energy Table must be saved in the same directory this Schrodinger.py file is saved to & run from
 .................................................................
@@ -23,52 +30,38 @@ to make values accessible for calculations
 '''
 
 import csv
-with open('potential_energy.2.dat', 'r') as file:
+with open('potential_energy.dat', 'r') as file:
     reader = csv.DictReader(file)
     positions=[]
     potentialEnergy=[]
+
     for row in reader:
-        positions.append(float(row['position']))
+        positions.append(float(row['Position']))
         potentialEnergy.append(float(row['Potential Energy']))
+c=positions[-1]
+positions.pop(-1)
+size=potentialEnergy[-1]
+potentialEnergy.pop(-1)
 
-#Just printing for my use
-#
-#
-print('OUTSIDE')
-print('pos')
+print('Position array ')
 print(positions)
-print('Ep')
+print('')
+print('Potential Energy array')
 print(potentialEnergy)
-
-c=1
-
-#Arg Parse Stuff left out because it causes tests to fail...
-'''
-def commandLineArgParse():
-    parser=argparse.ArgumentParser()
-    parser.add_argument('--c', type = int, default = 1, help = 'c, a constant, default value is 1')
-    parser.add_argument('--bs', type=int, default = 3, help = 'the size of the basis set, default is 3')
-    args = parser.parse_args()
-    constant=args.c
-    basisSize=args.bs
-    return constant, basisSize
-
-print('OUTSIDE')
-commandLineArguments=commandLineArgParse()
-c=commandLineArguments[0]
-sizeOfBasis=commandLineArguments[1]
+print('')
+print('c')
 print(c)
-print(sizeOfBasis)
-'''
 print('')
-print('')
-print('')
+print('size')
+print(size)
+
+
 
 ''' deltaSquareFunc
- -----------------------------------------------------------------------------------------------
+ -------------------------------------------------------------------------------------------------
     function computes del**2 of each element in the basis set
     where the basis set is the Fourier series of n # of terms, where n is the specified basis size
-    -----------------------------------------------------------------------------------------------
+ -------------------------------------------------------------------------------------------------
 Please Note: Complications with handling lambda functions generated via iteration
                have caused unusual form of these values (components of values stored amongst 2 arrays) 
 
@@ -104,12 +97,20 @@ def deltaSquareFunc(size):
    
 
 
-'''
-Applying Operator to basis, finding H_hat,
-allows us to represent operator as matrix
+''' operatorMatrix
+------------------------------------------------------------------------------------------------------------------------------
+    Hhat(psi(x))=-c*del**2(psi(x))+Vo(x)
+    this function maps Hhat to a matrix, representing the operator
+------------------------------------------------------------------------------------------------------------------------------    
+    Function takes del**2 values previously calculated for each element of the basis set,
+    For each pair of Position & Potential Energy values provided, the Hamiltonian is evaluated by numerical integration
+    Application of the operator to each element of the basis set, at each pair of values is mapped to a matrix, 
+    which is used to represent the Schrodinger Equation in our basis set
+
+INPUTS --> array of Position values, array of Potential Energy values, the arrays representing the basis set, & constant "c"
+OUTPUTS--> a numpy matrix representing the operator, & the dimensions of the matrix
 '''
 
-c=3
 def operatorMatrix (positions, potentialEnergy, yValues, deltaList,c):
     matrix = np.zeros((len(positions), len(deltaList)))
 
@@ -122,11 +123,22 @@ def operatorMatrix (positions, potentialEnergy, yValues, deltaList,c):
             dim=[len(deltaList),len(positions)]
     return matrix,dim
 
-source=deltaSquareFunc(7)
+#evaluating del**2 of each basis set element
+source=deltaSquareFunc(size)
 ys=source[0]
 fns=source[1]
+#generating the numpy matrix representing the operator
 first = operatorMatrix(positions, potentialEnergy, ys, fns,c)
 
+''' generateTfMatrix
+---------------------------------------------------------------------------------------------------------------------
+    Tensorflow is used to solve the eigenvalue eigenvector problem which allows the determination of the wavefunction
+    to do this, the operator matrix must be represented as a tensor (a tensorflow matrix, w/ particular shape)
+    this function converts the numpy matrix to a matrix tensorflow tensor
+---------------------------------------------------------------------------------------------------------------------
+INPUTS --> Numpy Matrix
+OUTPUTS--> Matrix form Tensorflow tensor (usable with tf.linalg.eigh())   
+'''
 def generateTfMatrix(Matrix):
     matr=Matrix[0]
     col=Matrix[1][0]
@@ -143,12 +155,20 @@ def generateTfMatrix(Matrix):
     tens=tf.cast(tens, tf.float64)
     return tens
 
+#generate tf matrix
 matrixgen=generateTfMatrix(first)
-print('MATRIXGEN')
-#print(matrixgen)
-#print(matrixgen[0])
-#print(matrixgen[:,0])
 
+''' eigen
+    ----------------------------------------------------------------------------------------
+    by computing the eigen values and eigen vectors corresponding to the operator matrix,
+    an eigenvalue corresponding to the lowest energy wave function can be computed,
+    and the eigenvectors corresponding to that eigenvalue represent the coefficients of the
+    lowest energy wavefunction
+    for a particular basis set, representing the schrodinger equation in 1D
+    -----------------------------------------------------------------------------------------
+INPUTS --> Matrix form tensorflow tensor
+OUTPUTS--> eigenvalue & eigenvector corresponding to the lowest enegy wavefunction for the inputs given
+'''
 def eigen(tensorMatrix):
     e,v=tf.linalg.eigh(tensorMatrix)
     eigenValue=e[0]

@@ -4,8 +4,7 @@ import math
 import numpy as np 
 import tensorflow as tf 
 tf.enable_eager_execution()
-#include test for what happens if basis set has Ex: 1 or 0 size
-##### ----->    WRITE COMMENTS EXPLAINING TESTS?????
+
 
 testPositions=[0.0, 1.57079, 3.14159, 4.71238, 6.28318, 7.85398, 9.42477]
 testEnergies=[0.0, 6.0, 0.0, -6.0, 0.0, 6.0, 0.0]
@@ -105,8 +104,8 @@ class TestGenerateTfMatrix(unittest.TestCase):
        numpMat=Schrodinger.operatorMatrix(testPositions, testEnergies,yValues,deltas,1)
        tfMat=Schrodinger.generateTfMatrix(numpMat)
        shape=tfMat.get_shape().as_list()
+       #Check the type & shape of the tensorflow matrices generated
        self.assertEqual(shape, [7,3])
-
        matrixType=tfMat.dtype
        self.assertEqual(matrixType, tf.float64)
 
@@ -123,6 +122,7 @@ class TestEigen(unittest.TestCase):
         e,v=Schrodinger.eigen(tfMat)
         valueShape=e.get_shape().as_list()
         valueType=e.dtype
+        #Check the type & shape of eigenvalue & eigenvectors which are output
         self.assertEqual(valueShape, [3])
         self.assertEqual(valueType, tf.float64)
         vectorShape=v.get_shape().as_list()
@@ -133,6 +133,6 @@ class TestEigen(unittest.TestCase):
 
         
 
-if __name__== '__main__':
-    unittest.main()
+#if __name__== '__main__':
+#    unittest.main()
         
