@@ -1,4 +1,5 @@
 # Project3
+
 ==========
 Schrodinger Equation 
 ===========
@@ -15,14 +16,14 @@ the lowest-energy state of the Hamiltonian can be determined by solving for eige
 
 The Schrodinger equation is as follows:
 
-     .. image:: https://latex.codecogs.com/gif.latex?%5Cinline%20%5Chat%7BH%7D%5CPsi%28x%29%20%3D%20E%5CPsi%28x%29
+.. image:: https://latex.codecogs.com/gif.latex?%5Cinline%20%5Chat%7BH%7D%5CPsi%28x%29%20%3D%20E%5CPsi%28x%29
 
 where H is the Hamiltonian operator, psi is the wavefunction, & E is the Energy
 
 
 The Hamiltonian operator acting upon a particular wavefunction is as follows:
 
-     .. image:: https://latex.codecogs.com/gif.latex?%5Cinline%20%5Chat%20H%20%5CPsi%28x%29%3D%20-c%5Cnabla%5E2%5CPsi%28x%29&plus;V_0%28x%29
+.. image:: https://latex.codecogs.com/gif.latex?%5Cinline%20%5Chat%20H%20%5CPsi%28x%29%3D%20-c%5Cnabla%5E2%5CPsi%28x%29&plus;V_0%28x%29
 
 where Vo is potential energy, c is a constant & del squared is the Laplacian
 
@@ -30,7 +31,7 @@ where Vo is potential energy, c is a constant & del squared is the Laplacian
 The Hamiltonian, as previously mentioned, is an operator which maps from L2 of complex functions to L2,
 which allows computation of the inner-product on complex L2 according to the following:
 
-     .. image:: https://latex.codecogs.com/gif.latex?%3Cf%28x%29%7Cg%28x%29%3E%20%5C%20%3D%5Cint%20%7Bf%28x%29%5Cbar%20%7Bg%28x%29%7D%20dx%7D
+.. image:: https://latex.codecogs.com/gif.latex?%3Cf%28x%29%7Cg%28x%29%3E%20%5C%20%3D%5Cint%20%7Bf%28x%29%5Cbar%20%7Bg%28x%29%7D%20dx%7D
      
      where - represents the complex conjugate
 
