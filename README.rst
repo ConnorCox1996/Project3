@@ -36,9 +36,17 @@ which allows computation of the inner-product on complex L2 according to the fol
 
 
 
+Setup
+-------------
+-------------
+
+Tensorflow
+----------
+
+To run this file you must have tensorflow (64bit version) installed on your machine
+
 Installation
--------------
--------------
+------------
 
 The tool can be installed from the command line using:
 
