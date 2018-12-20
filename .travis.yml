@@ -2,8 +2,18 @@ language: python
 python:
   - "3.6.4"
 
+install:
+  - pip install python-coveralls
+  - pip install coverage
+
+before_install:
+  - pip install coverage
+  - pip install tensorflow
+   
+
 
 #command to run tests
 script:
-  - pytest
+  - coverage run --source=schrodinger setup.py test
+  - coverage report -m
   
