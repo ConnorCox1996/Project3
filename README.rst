@@ -106,6 +106,13 @@ Running Program
 To run the program from the command line, simply type 
 
 ``python Schrodinger.py``
+
+
+
+
+
+Note: In order to compute eigenvalues/eigenvectors, the matrix dealt with must be of shape NxN
+      Wavefunction coefficients will only be returned if the size of basis set input is equal to the number of position/potential energy       inputs
  
 Testing & Coverage
 ------------------
